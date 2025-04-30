@@ -1,8 +1,9 @@
-# 🎬 Personal Movie/Show Watchlist
+# 🎬 Personal Movie/Series Watchlist
 
 A full-stack Flask web app to manage a personal movie & TV show watchlist.
 
-Built with Flask, SQLAlchemy, Flask-Login, and Bootstrap, this project features user authentication, a responsive UI, dynamic stats visualization, and is prepped for movie API integration (OMDb).
+Built with Flask, SQLAlchemy, Flask-Login, and Bootstrap, this project features user authentication, a responsive UI, OMDb API integration, and dynamic stats visualization.  
+🌐 **Live Demo:** [https://personal-watchlist-tracker.onrender.com](https://personal-watchlist-tracker.onrender.com)
 
 ---
 
@@ -20,7 +21,7 @@ Built with Flask, SQLAlchemy, Flask-Login, and Bootstrap, this project features 
   - Total movies, average rating, etc.
 - ✅ **Flash toasts for login, logout, rating, errors**
 - ✅ **Responsive UI with Bootstrap**
-- 🔜 **Coming soon: OMDb API integration** (auto-fill data from movie title)
+- ✅ **OMDb API integration** for auto-filling movie/show details by title
 
 ---
 
