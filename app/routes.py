@@ -5,6 +5,9 @@ from flask import jsonify
 from flask import flash
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import requests, os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 
@@ -34,18 +37,24 @@ def index():
 def add():
     if request.method == "POST":
         title = request.form["title"]
-        description = request.form.get("description")
-        genre = request.form.get("genre")
-        type_ = request.form.get("type")
 
-        # Basic validation for type and genre
-        if not genre or not type_:
-            flash("❗ Please select both Genre and Type!")
-            return render_template("add.html", 
-                                title=title, 
-                                description=description,
-                                selected_genre=genre, 
-                                selected_type=type_)
+        api_key = os.environ.get('OMDB_API_KEY')
+        if not api_key:
+            api_key = "fallback-testing-key"
+
+        params = {"t": title, "apikey": api_key}
+        response = requests.get("http://www.omdbapi.com/", params=params)
+        data = response.json()
+
+        if data.get("Response") == "False":
+            flash(f"❗ OMDb could not find the title: {title}", "danger")
+            # 🚨 Render the Add Movie page again immediately, not redirect
+            return render_template("add.html")
+
+        # 🚀 If OMDb found it, continue saving
+        description = data.get("Plot") or ""
+        genre = data.get("Genre") or ""
+        type_ = data.get("Type") or ""
 
         new_movie = Movie(
             title=title,
@@ -56,7 +65,8 @@ def add():
         )
         db.session.add(new_movie)
         db.session.commit()
-        flash("🎬 Movie/Show added successfully!")
+
+        flash("✅ Title added successfully!", "success")
         return redirect(url_for("index"))
 
     return render_template("add.html")
@@ -108,7 +118,7 @@ def get_rating(movie_id):
 
 @app.route("/stats")
 def stats():
-    movies = Movie.query.all()
+    movies = Movie.query.filter_by(user_id=current_user.id).all()
     total_movies = len(movies)
     watched_movies = len([m for m in movies if m.watched])
     unwatched_movies = total_movies - watched_movies
