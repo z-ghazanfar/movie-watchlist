@@ -1,4 +1,4 @@
-# 🎬 Personal Movie/Series Watchlist
+# 🎬 Personal Movie/Series Watchlist Tracker
 
 A full-stack Flask web app to manage a personal movie & TV show watchlist.
 
